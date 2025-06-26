@@ -1,0 +1,701 @@
+/* Typography */
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;700&display=swap');
+
+/* Custom font face for headlines - similar to Imperial */
+@font-face {
+    font-family: 'nyt-cheltenham';
+    src: url('https://g1.nyt.com/fonts/family/cheltenham/cheltenham-normal-700.woff2') format('woff2'),
+         url('https://g1.nyt.com/fonts/family/cheltenham/cheltenham-normal-700.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Chomsky font for the masthead */
+@font-face {
+    font-family: 'Chomsky';
+    src: url('https://raw.githubusercontent.com/ctrlcctrlv/chomsky/master/dist/Chomsky.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/ctrlcctrlv/chomsky/master/dist/Chomsky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    box-shadow: none;
+}
+
+body {
+    font-family: georgia, "times new roman", times, serif;
+    line-height: 1.6;
+}
+
+/* Header styles */
+header {
+    border-bottom: 1px solid #e2e2e2;
+    padding: 10px 0;
+}
+
+.top-nav {
+    background-color: white;
+    padding: 8px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.nav-links a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Updated masthead styles */
+.masthead {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #000;
+    margin-bottom: 20px;
+}
+
+.masthead h1 {
+    font-family: 'Chomsky', georgia, 'times new roman', times, serif;
+    font-size: 4rem; /* Increased size for better effect */
+    font-weight: normal; /* Chomsky works better with normal weight */
+    letter-spacing: normal; /* Remove letter spacing as Chomsky has its own spacing */
+    text-rendering: geometricPrecision;
+    margin: 0;
+    padding: 0;
+}
+
+/* Crypto banner styles */
+.crypto-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    margin: 20px 0;
+}
+
+.crypto-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.token-name {
+    font-weight: bold;
+}
+
+.token-price {
+    color: #4CAF50;
+    font-weight: bold;
+    animation: blink 1.5s infinite;
+    display: inline-block; /* Ensures animation works properly */
+}
+
+.crypto-actions {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dex-btn {
+    background-color: #f8f8f8;
+    border: 1px solid #333;
+    color: #333;
+}
+
+.buy-btn {
+    background-color: #000;
+    color: white;
+}
+
+/* Contract info styles */
+.contract-info {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.contract-address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-family: monospace;
+    margin-top: 10px;
+}
+
+.copy-btn {
+    background-color: #e2e2e2;
+    font-size: 0.8rem;
+}
+
+/* Today's Paper section */
+.todays-paper {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.loading {
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .masthead h1 {
+        font-size: 2rem;
+    }
+
+    .crypto-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .contract-address {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-links a {
+        margin: 0 8px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Add this to your existing CSS */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* View handling */
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* Article Grid */
+.articles-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Article Preview */
+.article-preview {
+    cursor: pointer;
+    padding: 20px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.article-preview:hover {
+    background-color: #f8f8f8;
+}
+
+.article-tag {
+    color: #cc0000;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.time-ago {
+    color: #666;
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+/* Article View */
+.go-back {
+    font-family: 'Libre Franklin', sans-serif;
+    background: none;
+    border: none;
+    padding: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+}
+
+.go-back:hover {
+    color: #000;
+}
+
+/* Article Content */
+#article-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#article-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+#article-content h2 {
+    font-size: 1.8rem;
+    margin: 30px 0 15px;
+}
+
+#article-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+#article-content blockquote {
+    font-size: 1.4rem;
+    font-style: italic;
+    border-left: 4px solid #000;
+    padding-left: 20px;
+    margin: 30px 0;
+    color: #555;
+}
+
+.article-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e2e2;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Articles Container */
+.articles-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    overflow: visible;
+    padding-bottom: 30px;
+}
+
+/* Featured article takes up 2 columns */
+.article-preview.featured {
+    margin: 0;
+    padding: 0;
+}
+
+/* Regular articles */
+.article-preview {
+    padding: 20px;
+    border-bottom: 1px solid #e2e2e2;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-height: 0;
+    max-height: none;
+}
+
+/* Adjust image sizes for different article types */
+.featured .article-image {
+    height: 400px;
+    object-fit: cover;
+}
+
+.article-preview:not(.featured) .article-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Article Meta */
+.article-meta {
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.live-tag {
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.time-ago {
+    color: #666;
+    font-size: 0.75rem;
+}
+
+/* Article Title */
+.article-title {
+    font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
+    font-size: 2.2rem;
+    line-height: 1.1;
+    margin: 0 0 8px 0;
+    font-weight: bold;
+}
+
+.featured .article-title {
+    font-size: 2.25rem;
+}
+
+/* Article Excerpt */
+.article-excerpt {
+    font-size: 1rem;
+    line-height: 1.3;
+    margin: 0 0 6px 0;
+    color: #333;
+}
+
+/* Read Time */
+.read-time {
+    font-size: 0.75rem;
+    color: #666;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+}
+
+/* Article Image Container */
+.article-image-container {
+    margin: 15px 0 0 0;
+    width: 100%;
+    display: flex;
+    gap: 0;
+    position: relative;
+    height: auto;
+    overflow: visible;
+}
+
+.article-image-container img {
+    width: 100%; /* Let each image take full width */
+    height: auto;
+    object-fit: contain; /* Change from cover to contain to show full image */
+    display: block; /* Remove any default image spacing */
+}
+
+/* If you want to control the overall container size */
+.article-preview.featured .article-image-container {
+    max-height: 500px; /* Adjust this value as needed */
+    overflow: hidden;
+}
+
+/* Make sure images are aligned properly */
+.article-image {
+    margin: 0;
+    padding: 0;
+    display: block;
+    min-height: 0;
+    max-height: none;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    padding: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .articles-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .article-preview.featured {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .articles-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .article-preview.featured {
+        grid-column: span 1;
+    }
+    
+    .featured .article-image {
+        height: 300px;
+    }
+}
+
+/* Remove any extra spacing */
+p, h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+
+/* Add proper spacing between sections */
+.article-section {
+    margin-bottom: 15px;
+}
+
+/* Specific selector for just the preview image in this article */
+.article-preview[data-article-id="jacknuked"] {
+    padding: 20px 0;
+    border-bottom: 1px solid #e2e2e2;
+    margin-bottom: 0;
+    overflow: visible; /* Ensure no cutoff */
+}
+
+/* Image container for the preview */
+.article-preview[data-article-id="jacknuked"] .article-image-container {
+    width: 100%;
+    margin: 15px 0;
+    padding-bottom: 20px; /* Add space below image */
+    overflow: visible;
+}
+
+/* Image itself */
+.article-preview[data-article-id="jacknuked"] img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain; /* Changed from cover to contain */
+    max-width: 400px; /* Control maximum width */
+    margin-bottom: 20px; /* Extra space at bottom */
+}
+
+/* Remove any constraints that might cause cutoff */
+.article-preview[data-article-id="jacknuked"] * {
+    overflow: visible;
+    max-height: none;
+}
+
+/* Ensure container has enough space */
+.articles-container {
+    overflow: visible;
+}
+
+/* Style specifically for this preview */
+.article-preview[data-article-id="gooning"] {
+    padding: 20px 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.article-preview[data-article-id="gooning"] .article-title {
+    font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.article-preview[data-article-id="gooning"] .article-excerpt {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #333;
+}
+
+.article-preview[data-article-id="gooning"] .time-ago {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Match the exact styling of the article it's replacing */
+.article-preview[data-article-id="lexapro"] {
+    padding: 0;
+    margin: 20px 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.article-preview[data-article-id="lexapro"] .article-title {
+    font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.article-preview[data-article-id="lexapro"] .article-excerpt {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin: 10px 0;
+    color: #333;
+}
+
+.article-preview[data-article-id="lexapro"] img {
+    width: 500px;
+    height: auto;
+    display: block;
+    margin: 12px 0;
+}
+
+.article-preview[data-article-id="lexapro"] .time-ago {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Container adjustments */
+.article-preview[data-article-id="lexapro"] .article-image-container {
+    width: auto;
+    margin: 10px 0;
+}
+
+/* Fourth article styling to match layout */
+.article-preview[data-article-id="speed"] {
+    padding: 0;
+    margin: 20px 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.article-preview[data-article-id="speed"] .article-title {
+    font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.article-preview[data-article-id="speed"] .article-excerpt {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.article-preview[data-article-id="speed"] img {
+    width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
+
+/* Specific styling for the Pump.fun ban article */
+.article-preview[data-article-id="pumpfunban"] {
+    padding: 0;
+    margin: 20px 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Image container for side-by-side images */
+.article-preview[data-article-id="pumpfunban"] .article-image-container {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+/* Individual images */
+.article-preview[data-article-id="pumpfunban"] .article-image {
+    width: 48%; /* Slightly less than 50% to account for gap */
+    height: auto;
+    object-fit: cover;
+}
+
+/* Title styling */
+.article-preview[data-article-id="pumpfunban"] .article-title {
+    font-family: "nyt-cheltenham", georgia, "times new roman", times, serif;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+/* Excerpt styling */
+.article-preview[data-article-id="pumpfunban"] .article-excerpt {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Standardized full article image styling for all articles */
+#article-content .article-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+#article-content .article-image {
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+    max-height: 800px;
+}
+
+/* For articles with side-by-side images (like the Pump.fun suspension article) */
+#article-content[data-article-id="pumpfunban"] .article-image-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#article-content[data-article-id="pumpfunban"] .article-image {
+    width: 45%; /* Keep the side-by-side layout but make them larger */
+}
+
+/* Ensure consistent container spacing */
+#article-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Specific styling for the Marlon article preview */
+.article-preview[data-article-id="marlon"] {
+    padding: 0 0 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/* Image container for the preview */
+.article-preview[data-article-id="marlon"] .article-image-container {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+    height: auto;
+    width: 100%;
+}
+
+/* Individual images in preview */
+.article-preview[data-article-id="marlon"] .article-image {
+    width: 48%; /* Slightly less than 50% to account for gap */
+    height: 300px; /* Fixed height to ensure consistency */
+    object-fit: cover;
+    display: block;
+}
+
+/* Ensure text elements have proper spacing */
+.article-preview[data-article-id="marlon"] .article-title {
+    margin-bottom: 10px;
+}
+
+.article-preview[data-article-id="marlon"] .article-excerpt {
+    margin-bottom: 15px;
+} 
