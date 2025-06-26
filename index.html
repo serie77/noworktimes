@@ -565,6 +565,17 @@
             });
         });
 
+        // Hash routing functions - ADD THESE
+        function getArticleFromURL() {
+            const hash = window.location.hash.substring(1);
+            return hash || null;
+        }
+
+        function updateURL(articleId) {
+            window.location.hash = articleId;
+        }
+
+        // MODIFY existing showArticle function
         function showArticle(articleId) {
             document.getElementById('homepage').classList.remove('active');
             const articleView = document.getElementById('article-view');
@@ -573,13 +584,42 @@
             const articleContent = articles[articleId];
             if (articleContent) {
                 document.getElementById('article-content').innerHTML = articleContent.content;
+                updateURL(articleId);
             }
         }
 
-        // Back button functionality
+        // MODIFY existing back button functionality
         document.querySelector('.go-back').addEventListener('click', function() {
             document.getElementById('article-view').classList.remove('active');
             document.getElementById('homepage').classList.add('active');
+            window.location.hash = '';
+        });
+
+        // ADD hash change listener
+        window.addEventListener('hashchange', function() {
+            const articleId = getArticleFromURL();
+            if (articleId && articles[articleId]) {
+                // Don't call showArticle to avoid infinite loop, just show the content
+                document.getElementById('homepage').classList.remove('active');
+                const articleView = document.getElementById('article-view');
+                articleView.classList.add('active');
+                
+                const articleContent = articles[articleId];
+                if (articleContent) {
+                    document.getElementById('article-content').innerHTML = articleContent.content;
+                }
+            } else {
+                document.getElementById('article-view').classList.remove('active');
+                document.getElementById('homepage').classList.add('active');
+            }
+        });
+
+        // ADD page load handler
+        window.addEventListener('load', function() {
+            const articleId = getArticleFromURL();
+            if (articleId && articles[articleId]) {
+                showArticle(articleId);
+            }
         });
     </script>
 </body>
