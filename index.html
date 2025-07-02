@@ -546,21 +546,185 @@
             }
         };
 
-        // Fix hash routing functions
+        // UPDATED: Use URL search params instead of hash for social sharing
         function getArticleFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleParam = urlParams.get('article');
+            if (articleParam) return articleParam;
+            
+            // Fallback to hash for internal navigation
             const hash = window.location.hash.substring(1);
             return hash || null;
         }
 
-        function updateURL(articleId) {
-            window.location.hash = articleId;
+        function updateURL(articleId, socialShare = false) {
+            if (socialShare) {
+                // For social sharing, use query params
+                const url = new URL(window.location);
+                url.searchParams.set('article', articleId);
+                window.history.replaceState({}, '', url);
+            } else {
+                // For internal navigation, use hash
+                window.location.hash = articleId;
+            }
         }
 
-        // FIXED goToHomepage function
         function goToHomepage() {
-            // Clear the hash completely
-            history.replaceState({}, '', window.location.pathname);
-            window.location.hash = '';
+            // Clear both hash and query params
+            const url = new URL(window.location);
+            url.searchParams.delete('article');
+            url.hash = '';
+            window.history.replaceState({}, '', url.pathname);
+        }
+
+        // UPDATED: Add server-side meta tag simulation
+        function setServerSideMetaTags() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('article');
+            
+            if (articleId && articles[articleId]) {
+                // This simulates what should be server-side rendered
+                updateMetaTags(articleId);
+                
+                // Also update the canonical URL
+                let canonical = document.querySelector('link[rel="canonical"]');
+                if (!canonical) {
+                    canonical = document.createElement('link');
+                    canonical.rel = 'canonical';
+                    document.head.appendChild(canonical);
+                }
+                canonical.href = `https://serie77.github.io/noworktimes/?article=${articleId}`;
+            }
+        }
+
+        // UPDATED: Enhanced meta tag updates for social sharing
+        function updateMetaTags(articleId) {
+            console.log('Updating meta tags for:', articleId);
+            const article = articles[articleId];
+            if (!article) {
+                console.log('No article found for meta tags');
+                return;
+            }
+            
+            // Extract title and description from article content
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = article.content;
+            
+            const h1Element = tempDiv.querySelector('h1');
+            const title = h1Element ? h1Element.textContent : 'The No Work Times';
+            
+            const firstP = tempDiv.querySelector('p');
+            const description = firstP ? firstP.textContent.substring(0, 155) + '...' : 'Breaking news and satirical takes on crypto, streaming, and internet culture.';
+            
+            // Get the first image from the article content
+            const firstImg = tempDiv.querySelector('img');
+            const imageUrl = firstImg ? `https://serie77.github.io/noworktimes/${firstImg.getAttribute('src')}` : 'https://serie77.github.io/noworktimes/nwt.png';
+            
+            // Use query param URL for social sharing
+            const articleUrl = `https://serie77.github.io/noworktimes/?article=${articleId}`;
+            
+            console.log('Meta tag data:', { title, description, imageUrl, articleUrl });
+            
+            // Update Open Graph tags
+            updateMetaTag('property', 'og:title', title);
+            updateMetaTag('property', 'og:description', description);
+            updateMetaTag('property', 'og:image', imageUrl);
+            updateMetaTag('property', 'og:url', articleUrl);
+            updateMetaTag('property', 'og:type', 'article');
+            
+            // Update Twitter Card tags
+            updateMetaTag('name', 'twitter:title', title);
+            updateMetaTag('name', 'twitter:description', description);
+            updateMetaTag('name', 'twitter:image', imageUrl);
+            updateMetaTag('name', 'twitter:card', 'summary_large_image');
+            
+            // Update page title
+            document.title = `${title} - The No Work Times`;
+        }
+
+        function updateMetaTag(attribute, name, content) {
+            let element = document.querySelector(`meta[${attribute}="${name}"]`);
+            if (element) {
+                element.setAttribute('content', content);
+            } else {
+                // Create the meta tag if it doesn't exist
+                element = document.createElement('meta');
+                element.setAttribute(attribute, name);
+                element.setAttribute('content', content);
+                document.head.appendChild(element);
+            }
+        }
+
+        // UPDATED: Enhanced page load handling
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Set server-side meta tags simulation on load
+            setServerSideMetaTags();
+            
+            // Add click event listeners to all articles
+            document.querySelectorAll('.article-preview').forEach((article, index) => {
+                article.addEventListener('click', function(e) {
+                    const articleId = this.dataset.articleId;
+                    console.log('Article clicked:', articleId);
+                    
+                    // Check if this is for social sharing (middle click, ctrl+click, etc.)
+                    const socialShare = e.ctrlKey || e.metaKey || e.button === 1;
+                    
+                    if (socialShare) {
+                        // For social sharing, open in new tab with query params
+                        const url = `${window.location.origin}${window.location.pathname}?article=${articleId}`;
+                        window.open(url, '_blank');
+                        return;
+                    }
+                    
+                    showArticle(articleId);
+                });
+            });
+
+            // Handle initial page load
+            const articleId = getArticleFromURL();
+            console.log('Initial load, article ID:', articleId);
+            
+            if (articleId && articles[articleId]) {
+                showArticle(articleId);
+            } else {
+                // Ensure homepage is shown and meta tags are reset
+                document.getElementById('homepage').classList.add('active');
+                document.getElementById('article-view').classList.remove('active');
+                resetMetaTags();
+            }
+        });
+
+        // Add share buttons to articles
+        function addShareButtons() {
+            const shareContainer = document.createElement('div');
+            shareContainer.className = 'article-share';
+            shareContainer.innerHTML = `
+                <h3>Share this article:</h3>
+                <button onclick="shareToTwitter()" class="share-btn twitter">Share on Twitter</button>
+                <button onclick="copyShareLink()" class="share-btn copy">Copy Link</button>
+            `;
+            return shareContainer;
+        }
+
+        function shareToTwitter() {
+            const currentArticleId = getArticleFromURL();
+            if (currentArticleId) {
+                const shareUrl = `https://serie77.github.io/noworktimes/?article=${currentArticleId}`;
+                const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`;
+                window.open(twitterUrl, '_blank');
+            }
+        }
+
+        function copyShareLink() {
+            const currentArticleId = getArticleFromURL();
+            if (currentArticleId) {
+                const shareUrl = `https://serie77.github.io/noworktimes/?article=${currentArticleId}`;
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
         }
 
         // FIXED showArticle function
@@ -653,61 +817,8 @@
             document.title = 'The No Work Times';
         }
 
-        // IMPROVED updateMetaTags function
-        function updateMetaTags(articleId) {
-            console.log('Updating meta tags for:', articleId);
-            const article = articles[articleId];
-            if (!article) {
-                console.log('No article found for meta tags');
-                return;
-            }
-            
-            // Extract title and description from article content
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = article.content;
-            
-            const h1Element = tempDiv.querySelector('h1');
-            const title = h1Element ? h1Element.textContent : 'The No Work Times';
-            
-            const firstP = tempDiv.querySelector('p');
-            const description = firstP ? firstP.textContent.substring(0, 155) + '...' : 'Breaking news and satirical takes on crypto, streaming, and internet culture.';
-            
-            // Get the first image from the article content
-            const firstImg = tempDiv.querySelector('img');
-            const imageUrl = firstImg ? `https://serie77.github.io/noworktimes/${firstImg.getAttribute('src')}` : 'https://serie77.github.io/noworktimes/nwt.png';
-            
-            const articleUrl = `https://serie77.github.io/noworktimes/#${articleId}`;
-            
-            console.log('Meta tag data:', { title, description, imageUrl, articleUrl });
-            
-            // Update Open Graph tags
-            updateMetaTag('property', 'og:title', title);
-            updateMetaTag('property', 'og:description', description);
-            updateMetaTag('property', 'og:image', imageUrl);
-            updateMetaTag('property', 'og:url', articleUrl);
-            updateMetaTag('property', 'og:type', 'article');
-            
-            // Update Twitter Card tags
-            updateMetaTag('name', 'twitter:title', title);
-            updateMetaTag('name', 'twitter:description', description);
-            updateMetaTag('name', 'twitter:image', imageUrl);
-            updateMetaTag('name', 'twitter:card', 'summary_large_image');
-            
-            // Update page title
-            document.title = `${title} - The No Work Times`;
-        }
-
-        function updateMetaTag(attribute, name, content) {
-            let element = document.querySelector(`meta[${attribute}="${name}"]`);
-            if (element) {
-                element.setAttribute('content', content);
-            } else {
-                // Create the meta tag if it doesn't exist
-                element = document.createElement('meta');
-                element.setAttribute(attribute, name);
-                element.setAttribute('content', content);
-                document.head.appendChild(element);
-            }
+        if (navigator.userAgent.indexOf('bot') !== -1 || navigator.userAgent.indexOf('crawler') !== -1) {
+            window.location.href = 'https://service.prerender.io/' + encodeURIComponent(window.location.href);
         }
     </script>
 </body>
