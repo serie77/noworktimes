@@ -597,8 +597,17 @@
             }
         });
 
-        // Fix page load handler
+        // Make articles clickable - ADD MISSING EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
+            // Add click event listeners to all articles
+            document.querySelectorAll('.article-preview').forEach(article => {
+                article.addEventListener('click', function() {
+                    const articleId = this.dataset.articleId;
+                    showArticle(articleId);
+                });
+            });
+
+            // Handle initial page load
             const articleId = getArticleFromURL();
             if (articleId && articles[articleId]) {
                 showArticle(articleId);
