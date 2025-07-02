@@ -12,23 +12,23 @@
     <!-- Chomsky font for the masthead -->
     <link rel="preload" as="font" href="fonts/Chomsky.woff2" type="font/woff2" crossorigin>
     
-    <!-- Open Graph meta tags -->
+    <!-- REMOVE/UPDATE the static Open Graph meta tags - they're causing the wrong embeds -->
     <meta property="og:site_name" content="The No Work Times">
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="https://serie77.github.io/noworktimes/">
-    <meta property="og:title" content="BREAKING: LexaproTrader's Eye Stolen By Disgruntled Trader After Thread Exposed As Insider Shill - The No Work Times">
-    <meta property="og:description" content="The prolific X analyst, known for his extensive alpha threads, lost his eye in what investigators are calling the most degenerate case of revenge trading they've ever seen.">
-    <meta property="og:image" content="https://serie77.github.io/noworktimes/lexaproo.jpg">
+    <meta property="og:title" content="The No Work Times - Breaking News">
+    <meta property="og:description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
+    <meta property="og:image" content="https://serie77.github.io/noworktimes/nwt.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     
-    <!-- Twitter Card meta tags -->
+    <!-- UPDATE Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@NoWorkTimes">
     <meta name="twitter:creator" content="@NoWorkTimes">
-    <meta name="twitter:title" content="BREAKING: LexaproTrader's Eye Stolen By Disgruntled Trader After Thread Exposed As Insider Shill">
-    <meta name="twitter:description" content="The prolific X analyst, known for his extensive alpha threads, lost his eye in what investigators are calling the most degenerate case of revenge trading they've ever seen.">
-    <meta name="twitter:image" content="https://serie77.github.io/noworktimes/lexaproo.jpg">
+    <meta name="twitter:title" content="The No Work Times - Breaking News">
+    <meta name="twitter:description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
+    <meta name="twitter:image" content="https://serie77.github.io/noworktimes/nwt.png">
     
     <!-- Additional meta tags for better sharing -->
     <meta name="description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
@@ -556,15 +556,21 @@
             window.location.hash = articleId;
         }
 
+        // FIXED goToHomepage function
         function goToHomepage() {
+            // Clear the hash completely
+            history.replaceState({}, '', window.location.pathname);
             window.location.hash = '';
-            window.history.pushState({}, '', window.location.pathname);
         }
 
-        // MODIFY existing showArticle function
+        // FIXED showArticle function
         function showArticle(articleId) {
-            if (!articles[articleId]) return;
+            if (!articles[articleId]) {
+                console.log('Article not found:', articleId);
+                return;
+            }
             
+            console.log('Showing article:', articleId);
             document.getElementById('homepage').classList.remove('active');
             const articleView = document.getElementById('article-view');
             articleView.classList.add('active');
@@ -575,18 +581,24 @@
             updateMetaTags(articleId);
         }
 
-        // MODIFY existing back button functionality
-        document.querySelector('.go-back').addEventListener('click', function() {
-            document.getElementById('article-view').classList.remove('active');
-            document.getElementById('homepage').classList.add('active');
-            goToHomepage();
-            // Reset to default meta tags
-            resetMetaTags();
+        // FIXED back button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const goBackBtn = document.querySelector('.go-back');
+            if (goBackBtn) {
+                goBackBtn.addEventListener('click', function() {
+                    document.getElementById('article-view').classList.remove('active');
+                    document.getElementById('homepage').classList.add('active');
+                    goToHomepage();
+                    resetMetaTags();
+                });
+            }
         });
 
-        // Fix hash change listener
+        // FIXED hash change listener
         window.addEventListener('hashchange', function() {
             const articleId = getArticleFromURL();
+            console.log('Hash changed to:', articleId);
+            
             if (articleId && articles[articleId]) {
                 showArticle(articleId);
             } else {
@@ -597,29 +609,36 @@
             }
         });
 
-        // Make articles clickable - ADD MISSING EVENT LISTENERS
+        // FIXED DOMContentLoaded event
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
             // Add click event listeners to all articles
-            document.querySelectorAll('.article-preview').forEach(article => {
+            document.querySelectorAll('.article-preview').forEach((article, index) => {
                 article.addEventListener('click', function() {
                     const articleId = this.dataset.articleId;
+                    console.log('Article clicked:', articleId);
                     showArticle(articleId);
                 });
             });
 
             // Handle initial page load
             const articleId = getArticleFromURL();
+            console.log('Initial load, article ID:', articleId);
+            
             if (articleId && articles[articleId]) {
                 showArticle(articleId);
             } else {
-                // Ensure homepage is shown
+                // Ensure homepage is shown and meta tags are reset
                 document.getElementById('homepage').classList.add('active');
                 document.getElementById('article-view').classList.remove('active');
+                resetMetaTags();
             }
         });
 
-        // Add function to reset meta tags to homepage defaults
+        // FIXED resetMetaTags function
         function resetMetaTags() {
+            console.log('Resetting meta tags to homepage');
             updateMetaTag('property', 'og:title', 'The No Work Times - Breaking News');
             updateMetaTag('property', 'og:description', 'Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.');
             updateMetaTag('property', 'og:image', 'https://serie77.github.io/noworktimes/nwt.png');
@@ -634,10 +653,14 @@
             document.title = 'The No Work Times';
         }
 
-        // Fix updateMetaTags function
+        // IMPROVED updateMetaTags function
         function updateMetaTags(articleId) {
+            console.log('Updating meta tags for:', articleId);
             const article = articles[articleId];
-            if (!article) return;
+            if (!article) {
+                console.log('No article found for meta tags');
+                return;
+            }
             
             // Extract title and description from article content
             const tempDiv = document.createElement('div');
@@ -649,11 +672,13 @@
             const firstP = tempDiv.querySelector('p');
             const description = firstP ? firstP.textContent.substring(0, 155) + '...' : 'Breaking news and satirical takes on crypto, streaming, and internet culture.';
             
-            // Get the first image from the article
+            // Get the first image from the article content
             const firstImg = tempDiv.querySelector('img');
             const imageUrl = firstImg ? `https://serie77.github.io/noworktimes/${firstImg.getAttribute('src')}` : 'https://serie77.github.io/noworktimes/nwt.png';
             
             const articleUrl = `https://serie77.github.io/noworktimes/#${articleId}`;
+            
+            console.log('Meta tag data:', { title, description, imageUrl, articleUrl });
             
             // Update Open Graph tags
             updateMetaTag('property', 'og:title', title);
