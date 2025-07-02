@@ -58,6 +58,28 @@
             <div class="crypto-actions">
                 <button class="dex-btn">VIEW ON DEXSCREENER</button>
                 <button class="buy-btn">BUY NOW</button>
+                <div class="social-icons" style="margin-bottom:0;margin-left:16px;">
+                  <a href="https://x.com/NoWorkTimes_" target="_blank" title="Follow us on X">
+                    <svg width="28" height="28" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect width="120" height="120" rx="24" fill="black"/>
+                      <path d="M89.6 30H102L72.8 62.1L106 90H86.1L64.7 70.5L41.6 90H29.2L60.2 56.9L28 30H48.4L67.1 48.1L89.6 30ZM86.2 84.2H91.9L50.1 35.2H44.1L86.2 84.2Z" fill="white"/>
+                    </svg>
+                  </a>
+                  <a href="https://x.com/i/communities/1940471420754243981" target="_blank" title="Join our X Community" class="community-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="7" cy="8" r="4" fill="#1da1f2"/>
+                      <circle cx="17" cy="8" r="4" fill="#1da1f2"/>
+                      <ellipse cx="7" cy="19" rx="6" ry="4" fill="#1da1f2"/>
+                      <ellipse cx="17" cy="19" rx="6" ry="4" fill="#1da1f2" fill-opacity="0.7"/>
+                      <circle cx="7" cy="8" r="2.2" fill="white"/>
+                      <circle cx="17" cy="8" r="2.2" fill="white"/>
+                    </svg>
+                  </a>
+                </div>
+                <div class="contract-address" style="margin-left:16px;">
+                  <span id="ca-text" style="font-family:monospace;cursor:pointer;user-select:all;">Undefined</span>
+                  <button id="copy-ca-btn" class="copy-btn" title="Copy contract address">Copy</button>
+                </div>
             </div>
         </div>
     </header>
@@ -820,6 +842,22 @@
         if (navigator.userAgent.indexOf('bot') !== -1 || navigator.userAgent.indexOf('crawler') !== -1) {
             window.location.href = 'https://service.prerender.io/' + encodeURIComponent(window.location.href);
         }
+    </script>
+    <script>
+      // Contract address copy logic
+      const caText = document.getElementById('ca-text');
+      const copyBtn = document.getElementById('copy-ca-btn');
+      const contractAddress = 'Undefined'; // Replace with your real contract address
+      function copyCA() {
+        navigator.clipboard.writeText(contractAddress).then(() => {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1200);
+        });
+      }
+      if (caText && copyBtn) {
+        caText.addEventListener('click', copyCA);
+        copyBtn.addEventListener('click', copyCA);
+      }
     </script>
 </body>
 </html> 

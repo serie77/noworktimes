@@ -698,4 +698,58 @@ p, h1, h2, h3 {
 
 .article-preview[data-article-id="marlon"] .article-excerpt {
     margin-bottom: 15px;
+}
+
+/* X (Twitter) and Community icons */
+.social-icons {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.social-icons a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.social-icons a svg {
+  transition: transform 0.2s, filter 0.2s;
+  vertical-align: middle;
+}
+
+.social-icons a:hover svg {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.community-badge {
+  background: #1da1f2;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 4px;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  white-space: nowrap;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .social-icons {
+    margin-left: 0;
+    justify-content: center;
+  }
+  .community-badge {
+    top: 18px;
+    left: 0;
+    font-size: 9px;
+    padding: 1px 4px;
+  }
 } 
