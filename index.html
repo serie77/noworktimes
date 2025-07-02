@@ -14,11 +14,11 @@
     
     <!-- Open Graph meta tags -->
     <meta property="og:site_name" content="The No Work Times">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <meta property="og:url" content="https://serie77.github.io/noworktimes/">
-    <meta property="og:title" content="The No Work Times - Breaking News">
-    <meta property="og:description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
-    <meta property="og:image" content="https://serie77.github.io/noworktimes/nwt.png">
+    <meta property="og:title" content="BREAKING: LexaproTrader's Eye Stolen By Disgruntled Trader After Thread Exposed As Insider Shill - The No Work Times">
+    <meta property="og:description" content="The prolific X analyst, known for his extensive alpha threads, lost his eye in what investigators are calling the most degenerate case of revenge trading they've ever seen.">
+    <meta property="og:image" content="https://serie77.github.io/noworktimes/lexaproo.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     
@@ -26,9 +26,9 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@NoWorkTimes">
     <meta name="twitter:creator" content="@NoWorkTimes">
-    <meta name="twitter:title" content="The No Work Times - Breaking News">
-    <meta name="twitter:description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
-    <meta name="twitter:image" content="https://serie77.github.io/noworktimes/nwt.png">
+    <meta name="twitter:title" content="BREAKING: LexaproTrader's Eye Stolen By Disgruntled Trader After Thread Exposed As Insider Shill">
+    <meta name="twitter:description" content="The prolific X analyst, known for his extensive alpha threads, lost his eye in what investigators are calling the most degenerate case of revenge trading they've ever seen.">
+    <meta name="twitter:image" content="https://serie77.github.io/noworktimes/lexaproo.jpg">
     
     <!-- Additional meta tags for better sharing -->
     <meta name="description" content="Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.">
@@ -556,12 +556,13 @@
 
         // Hash routing functions - ADD THESE
         function getArticleFromURL() {
-            const hash = window.location.hash.substring(1);
-            return hash || null;
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('article') || null;
         }
 
         function updateURL(articleId) {
-            window.location.hash = articleId;
+            const newUrl = `${window.location.pathname}?article=${articleId}`;
+            window.history.pushState({}, '', newUrl);
         }
 
         // MODIFY existing showArticle function
@@ -604,11 +605,20 @@
             }
         });
 
-        // ADD page load handler
+        // ADD page load handler BEFORE other event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleId = getArticleFromURL();
+            if (articleId && articles[articleId]) {
+                updateMetaTags(articleId);
+                showArticle(articleId);
+            }
+        });
+
+        // Also add to window load for extra safety
         window.addEventListener('load', function() {
             const articleId = getArticleFromURL();
             if (articleId && articles[articleId]) {
-                showArticle(articleId);
+                updateMetaTags(articleId);
             }
         });
 
