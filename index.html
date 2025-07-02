@@ -546,83 +546,86 @@
             }
         };
 
-        // Make articles clickable
-        document.querySelectorAll('.article-preview').forEach(article => {
-            article.addEventListener('click', function() {
-                const articleId = this.dataset.articleId;
-                showArticle(articleId);
-            });
-        });
-
-        // Hash routing functions - ADD THESE
+        // Fix hash routing functions
         function getArticleFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('article') || null;
+            const hash = window.location.hash.substring(1);
+            return hash || null;
         }
 
         function updateURL(articleId) {
-            const newUrl = `${window.location.pathname}?article=${articleId}`;
-            window.history.pushState({}, '', newUrl);
+            window.location.hash = articleId;
+        }
+
+        function goToHomepage() {
+            window.location.hash = '';
+            window.history.pushState({}, '', window.location.pathname);
         }
 
         // MODIFY existing showArticle function
         function showArticle(articleId) {
+            if (!articles[articleId]) return;
+            
             document.getElementById('homepage').classList.remove('active');
             const articleView = document.getElementById('article-view');
             articleView.classList.add('active');
             
             const articleContent = articles[articleId];
-            if (articleContent) {
-                document.getElementById('article-content').innerHTML = articleContent.content;
-                updateURL(articleId);
-                updateMetaTags(articleId);
-            }
+            document.getElementById('article-content').innerHTML = articleContent.content;
+            updateURL(articleId);
+            updateMetaTags(articleId);
         }
 
         // MODIFY existing back button functionality
         document.querySelector('.go-back').addEventListener('click', function() {
             document.getElementById('article-view').classList.remove('active');
             document.getElementById('homepage').classList.add('active');
-            window.location.hash = '';
+            goToHomepage();
+            // Reset to default meta tags
+            resetMetaTags();
         });
 
-        // ADD hash change listener
+        // Fix hash change listener
         window.addEventListener('hashchange', function() {
             const articleId = getArticleFromURL();
             if (articleId && articles[articleId]) {
-                // Don't call showArticle to avoid infinite loop, just show the content
-                document.getElementById('homepage').classList.remove('active');
-                const articleView = document.getElementById('article-view');
-                articleView.classList.add('active');
-                
-                const articleContent = articles[articleId];
-                if (articleContent) {
-                    document.getElementById('article-content').innerHTML = articleContent.content;
-                }
+                showArticle(articleId);
             } else {
+                // Show homepage
                 document.getElementById('article-view').classList.remove('active');
                 document.getElementById('homepage').classList.add('active');
+                resetMetaTags();
             }
         });
 
-        // ADD page load handler BEFORE other event listeners
+        // Fix page load handler
         document.addEventListener('DOMContentLoaded', function() {
             const articleId = getArticleFromURL();
             if (articleId && articles[articleId]) {
-                updateMetaTags(articleId);
                 showArticle(articleId);
+            } else {
+                // Ensure homepage is shown
+                document.getElementById('homepage').classList.add('active');
+                document.getElementById('article-view').classList.remove('active');
             }
         });
 
-        // Also add to window load for extra safety
-        window.addEventListener('load', function() {
-            const articleId = getArticleFromURL();
-            if (articleId && articles[articleId]) {
-                updateMetaTags(articleId);
-            }
-        });
+        // Add function to reset meta tags to homepage defaults
+        function resetMetaTags() {
+            updateMetaTag('property', 'og:title', 'The No Work Times - Breaking News');
+            updateMetaTag('property', 'og:description', 'Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.');
+            updateMetaTag('property', 'og:image', 'https://serie77.github.io/noworktimes/nwt.png');
+            updateMetaTag('property', 'og:url', 'https://serie77.github.io/noworktimes/');
+            updateMetaTag('property', 'og:type', 'website');
+            
+            updateMetaTag('name', 'twitter:title', 'The No Work Times - Breaking News');
+            updateMetaTag('name', 'twitter:description', 'Breaking news and satirical takes on crypto, streaming, and internet culture. Your source for the most absurd stories on the internet.');
+            updateMetaTag('name', 'twitter:image', 'https://serie77.github.io/noworktimes/nwt.png');
+            updateMetaTag('name', 'twitter:card', 'summary_large_image');
+            
+            document.title = 'The No Work Times';
+        }
 
-        // Add this function to your existing JavaScript
+        // Fix updateMetaTags function
         function updateMetaTags(articleId) {
             const article = articles[articleId];
             if (!article) return;
