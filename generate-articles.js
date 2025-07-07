@@ -2,10 +2,10 @@ const fs = require('fs');
 
 // Your articles with the info needed for social sharing
 const articles = {
-    'pump-token-delayed-alon-cohen-headquarters': {
-        title: 'BREAKING: Pump.fun\'s $PUMP Token Launch Delayed Until July 4th Amid Alon Cohen\'s Headquarters Being Nuked',
-        description: 'The highly anticipated $1B token sale faces unexpected delays as Pump.fun\'s headquarters experiences disruption from ongoing regional conflicts.',
-        image: 'alon.jpg'
+    'bonk-surpasses-pump-volume-band-battle': {
+        title: 'BREAKING: Bonk Surpasses Pump.Fun in Daily Volume, Unipcs and SolportTom Go Band for Band with Alon',
+        description: 'In a stunning reversal of fortune, BonkFun has officially flipped Pump.fun in daily trading volume, with ecosystem advocates Unipcs and SolportTom challenging Alon Cohen\'s extractive model through aggressive BONK buybacks and burns.',
+        image: 'band.jpg'
     },
     'ray-snipes-rakai-5am-drowning-prank': {
         title: 'BREAKING: Ray SNIPED RaKai in Back of Head After 5AM Drowning Wake-Up Call Goes Wrong',
